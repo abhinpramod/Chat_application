@@ -10,5 +10,8 @@ export default {
     extend: {},
   },
   plugins: [daisyui],
+  daisyui: {
+    themes: ["coffee", "light", "dark","cupcake","retro","black","halloween","luxury","dracula","cmyk","autumn","business","acid","lemonade","night","coffee","winter"],
+  }
 }
 
