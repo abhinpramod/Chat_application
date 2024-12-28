@@ -18,9 +18,9 @@ const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
   const { theme } = useThemeStore();
 
-  // console.log({ onlineUsers });
 
   useEffect(() => {
+   
     checkAuth();
   }, [checkAuth]);
 
@@ -34,7 +34,7 @@ const App = () => {
     );
 
   return (
-    <div data-theme={theme}>
+    <div >
       <Navbar />
 
       <Routes>
@@ -46,6 +46,7 @@ const App = () => {
       </Routes>
 
       <Toaster />
+
     </div>
   );
 };

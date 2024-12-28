@@ -9,23 +9,24 @@ import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [comfirmpassword, setComfirmPassword] = useState("");
   const [formData, setFormData] = useState({
-    fullName: "",
+    fullname: "",
     email: "",
     password: "",
-    comfirmpassword: "",
+ 
   });
 
   const { signup, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if(!formData.fullName&&!formData.email&& !formData.password&& !formData.comfirmpassword) return toast.error("All fields are required");
-    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if(!formData.fullname&&!formData.email&& !formData.password&& !comfirmpassword) return toast.error("All fields are required");
+    if (!formData.fullname.trim()) return toast.error("Full name is required");
     if (!formData.email.trim()) return toast.error("Email is required");
     if (!/\S+@\S+\.\S+/.test(formData.email)) return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
     if (formData.password.length < 6) return toast.error("Password must be at least 6 characters");
-    if (formData.password !== formData.comfirmpassword)
+    if (formData.password !== comfirmpassword)
       return toast.error("Passwords do not match");
 
     return true;
@@ -71,8 +72,8 @@ const SignUpPage = () => {
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder=""
-                  value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  value={formData.fullname}
+                  onChange={(e) => setFormData({ ...formData, fullname: e.target.value })}
                 />
               </div>
             </div>
@@ -126,7 +127,7 @@ const SignUpPage = () => {
                   className={`input input-bordered w-full pl-10`}
                   placeholder="  "
                   value={formData.comfirmpassword}
-                  onChange={(e) => setFormData({ ...formData,comfirmpassword: e.target.value })}
+                  onChange={(e) => setComfirmPassword( e.target.value )}
                 />
                 <button
                   type="button"
