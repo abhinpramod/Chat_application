@@ -1,4 +1,3 @@
-
 import { MessageSquare } from "lucide-react";
 
 const NopreviousMessages = () => {
@@ -13,12 +12,11 @@ const NopreviousMessages = () => {
              justify-center animate-bounce"
             >
               <MessageSquare className="w-8 h-8 text-primary " />
-              </div>
+            </div>
           </div>
         </div>
 
         <h2 className="text-2xl font-bold">No chats yet!</h2>
-       
       </div>
     </div>
   );
