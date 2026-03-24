@@ -14,10 +14,40 @@ const ProfilePage = () => {
 
     reader.readAsDataURL(file);
 
-    reader.onload = async () => {
-      const base64Image = reader.result;
-      setSelectedImg(base64Image);
-      await updateProfile({ profilePic: base64Image });
+    reader.onload = async (event) => {
+      const img = new Image();
+      img.src = event.target.result;
+
+      img.onload = async () => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 500;
+        const MAX_HEIGHT = 500;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress image to JPEG format with 85% quality
+        const base64Image = canvas.toDataURL("image/jpeg", 0.85);
+
+        setSelectedImg(base64Image);
+        await updateProfile({ profilePic: base64Image });
+      };
     };
   };
 
@@ -38,6 +68,7 @@ const ProfilePage = () => {
                 src={selectedImg || authUser.profilePic || "/avatar.png"}
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4 "
+                
               />
               <label
                 htmlFor="avatar-upload"

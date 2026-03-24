@@ -36,7 +36,19 @@ export const useChatStore = create((set, get) => ({
   },
 
   sendMessage: async (data) => {
-    const { messages, selectedUser } = get();
+    const { selectedUser } = get();
+
+    // OPTIMISTIC UPDATE: render message instantly to remove perceived lag
+    const tempMessage = {
+      _id: "temp-" + Date.now(),
+      senderId: useAuthStore.getState().authUser._id,
+      receiverId: selectedUser._id,
+      text: data.text,
+      image: data.image,
+      createdAt: new Date().toISOString(),
+    };
+
+    set({ messages: [...get().messages, tempMessage] });
 
     try {
       const res = await axiosInstance.post(
@@ -44,10 +56,20 @@ export const useChatStore = create((set, get) => ({
         data
       );
 
-      set({ messages: [...messages, res.data] });
+      // Replace the temp message with real backend message
+      set({
+        messages: get().messages.map((msg) =>
+          msg._id === tempMessage._id ? res.data : msg
+        ),
+      });
     } catch (error) {
       console.log("Error from sendMessage:", error);
-      toast.error(error.response.data.msg);
+      toast.error(error.response?.data?.msg || "Failed to send message");
+      
+      // Rollback if there is an error
+      set({
+        messages: get().messages.filter((msg) => msg._id !== tempMessage._id),
+      });
     }
   },
   subscribeToMessages: (userId) => {

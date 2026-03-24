@@ -31,17 +31,23 @@ const MessageInput = () => {
     const handleSendMessage = async (e) => {
         e.preventDefault();
         if(!text.trim() && !imagePreview) return;
-       try {
-        await sendMessage({ text, image: imagePreview });
+        
+        // Cache current values
+        const currentText = text;
+        const currentImage = imagePreview;
+        
+        // Clear input immediately for responsive UI
         setText("");
-    setImagePreview(null);
-    if(fileInputRef.current) {
-        fileInputRef.current.value = "";
-    }
+        setImagePreview(null);
+        if(fileInputRef.current) {
+            fileInputRef.current.value = "";
+        }
+
+       try {
+        await sendMessage({ text: currentText, image: currentImage });
        } catch (error) {
         console.log("Error in handleSendMessage:", error);
-        toast.error(error.response.data.message);
-        
+        toast.error(error.response?.data?.message || "Something went wrong");
        }
     }
   return (
